@@ -1,4 +1,4 @@
-package ac1.aluno;
+package ac1.aluno.model;
 
 public class Aluno {
 
