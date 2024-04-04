@@ -1,6 +1,9 @@
 package ac1.aluno.repository;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.scheduling.config.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,66 +12,63 @@ import ac1.aluno.model.Aluno;
 
 @Repository
 public class AlunoRepositoryImpl implements AlunoRepository{
-    private final List<Aluno> alunos = new ArrayList<>();
-    private Long nextId = 1L;
+    private final JdbcTemplate jdbcTemplate;
 
-    public AlunoRepositoryImpl() {
-        // Inicialização da lista de alunos
-        alunos.add(new Aluno(1L, "Matheus", "gmail", "ads", "23/04/1995"));
-        alunos.add(new Aluno(2L, "Joao", "gmail", "ads", "23/04/1995"));
-        alunos.add(new Aluno(3L, "Nicolas", "gmail", "ads", "23/04/1995"));
-        alunos.add(new Aluno(4L, "Guilherme", "gmail", "ads", "23/04/1995"));
-        nextId =4L;
+    public AlunoRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<Aluno> findAll() {
-        return alunos;
+        return jdbcTemplate.query("SELECT * FROM task", (resultSet, rowNum) -> {
+                    System.out.println("Numero da linha: " + rowNum);
+                    return new Aluno(
+                            resultSet.getLong("id"),
+                            resultSet.getString("nome"),
+                            resultSet.getString("email"),
+                            resultSet.getString("curso"),
+                            resultSet.getString("dataNascimento")
+
+                    );
+                }
+        );
     }
     
     @Override
     public Aluno findById(Long id) {
-        return alunos.stream()
-                .filter(alunos -> alunos.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+
+        String query = "SELECT * FROM task WHERE id = ?";
+
+        return jdbcTemplate.queryForObject(query, new Object[]{id}, (resultSet, rowNum) ->
+                new Aluno(
+                        /*
+                        Para se recuperar os valores das colunas é preciso saber o tipo e o nome, pois os métodos são
+                        especificos
+                         */
+                        resultSet.getLong("id"),
+                            resultSet.getString("nome"),
+                            resultSet.getString("email"),
+                            resultSet.getString("curso"),
+                            resultSet.getString("dataNascimento")
+
+                )
+        );
     }
 
-    @Override
     public Aluno save(Aluno aluno) {
-        if (aluno.getId() == null) {
-            aluno.setId(nextId++);
-            alunos.add(aluno);
-        } else {
-            alunos.removeIf(t -> t.getId().equals(aluno.getId()));
-            alunos.add(aluno);
-        }
+        String query = "INSERT INTO aluno (nome, email, curso, dataNascimento) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(query, aluno.getNome(), aluno.getEmail(), aluno.getCurso(), aluno.getDataNascimento());
         return aluno;
     }
 
-    @Override
     public void delete(Long id) {
-        int a = (int) (id -1 );
-        alunos.remove(a);
+        String query = "DELETE FROM aluno WHERE id = ?";
+        jdbcTemplate.update(query, id);
     }
 
-    @Override
     public Aluno update(Aluno aluno, Long id) {
-        for (Aluno a : alunos) {
-            if (a.getId().equals(id)) {
-                a.setNome(aluno.getNome());
-                a.setEmail(aluno.getEmail());
-                a.setDataNascimento(aluno.getDataNascimento());
-                a.setCurso(aluno.getCurso());
-                return a;
-            }
-        }
-        return null;
-    }
-
-    
-
-    
-
-   
+        String query = "UPDATE aluno SET nome = ?, email = ?, curso = ?, dataNascimento = ? WHERE id = ?";
+        jdbcTemplate.update(query, aluno.getNome(), aluno.getEmail(), aluno.getCurso(), aluno.getDataNascimento(), id);
+        return aluno;
+    }  
 }
