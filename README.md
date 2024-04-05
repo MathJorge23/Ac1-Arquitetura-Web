@@ -1,17 +1,23 @@
-## Microserviço de Gerenciamento de Alunos
+# Microserviço de Gerenciamento de Alunos
 Este é um projeto de microserviço desenvolvido em Spring Boot, utilizando o JDBC Template para interagir com o banco de dados, com o propósito de gerenciar alunos em uma universidade.
 
-Descrição
-Este microserviço faz parte de uma aplicação maior que tem como objetivo gerenciar diversos aspectos de uma universidade. Ele concentra-se nas operações CRUD (Create, Read, Update, Delete) relacionadas aos alunos. Cada aluno é caracterizado por atributos como nome, idade, sexo, email e nacionalidade.
+# Descrição
+Este microserviço faz parte de uma aplicação maior que tem como objetivo gerenciar diversos aspectos de uma universidade. 
+Ele concentra-se nas operações CRUD (Create, Read, Update, Delete) relacionadas aos alunos.
+Cada aluno é caracterizado por atributos como nome, idade, sexo, email e nacionalidade.
 
-Funcionalidades
+# Funcionalidades
 CRUD de alunos (Create, Read, Update, Delete)
+
 Pesquisa de alunos por diferentes critérios (nome, idade, sexo, email, nacionalidade)
-Requisitos
+# Requisitos
 Java 8 ou superior
+
 Banco de dados PostgreSQL
-IntelliJ IDEA (ou outra IDE de sua preferência)
-Prints Postman
+
+VSCODE IDEA (ou outra IDE de sua preferência)
+
+## Prints Postman
 ![add_2](https://github.com/MathJorge23/Ac1-Arquitetura-Web/assets/108235675/371f9ccc-1dbf-4b69-b147-16f6f476e08d)
 
 ![delete](https://github.com/MathJorge23/Ac1-Arquitetura-Web/assets/108235675/65ad153e-0d8b-4563-ab00-42c5244d5f9c)
